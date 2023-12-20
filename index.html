@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My First Web App</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>Mortgage Payoff Calendar</header>
+    <div class="instructions">This web app is designed to aid you in calculating the estimated time it would take to fully pay your mortgage loan.</div>
+    <div id="data">
+    <section id="dataInput">
+        <div class="dataInputs"> 
+                <div class="selection">
+                    <p>Current mortgage principal:</p>
+                    <div class="slidecontainer">
+                    <input type="range" min="10000" max="600000" value="0" class="slider" id="myRange"  step="1000">
+                    </div>
+                </div>
+                <div id="mortgageAmount"></div>                
+            </div>
+            <div class="dataInputs"> 
+                <div class="selection">
+                    <p>Monthly mortgage payment (principal and interest only):</p>
+                    <div class="slidecontainer">
+                    <input type="range" min="500" max="5000" value="0" class="slider" id="myRange2" step="10">
+                    </div>
+                </div>
+                <div id="monthlyPayment"></div>
+            </div>
+            <div class="dataInputs"> 
+                <div class="selection">
+                    <p>Mortgage interest:</p>
+                    <div class="slidecontainer">
+                    <input type="range" min="1" max="15" value="0" class="slider" id="myRange3" step="0.01">
+                    </div>
+                </div>
+                <div id="mortgageInterest"></div>
+            </div>
+            <div class="dataInputs"> 
+                <div class="selection">
+                    <p>Extra mortgage monthly payment?:</p>
+                    <div class="slidecontainer">
+                    <input type="range" min="0" max="5000" value="0" class="slider" id="myRange4" step="50">
+                    </div>
+                </div>
+                <div id="mortgageExtra"></div>
+            </div>
+            <div class="dataInputs"> 
+                <div class="selection">
+                    <p>Current savings amount:</p>
+                    <div class="slidecontainer">
+                    <input type="range" min="0" max="600000" value="0" class="slider" id="myRange5" step="50"> 
+                    </div>
+                </div>
+                <div id="currentSavings"></div>
+            </div>
+            <div class="dataInputs"> 
+                <div class="selection">
+                    <p>Monthly savings:</p>
+                    <div class="slidecontainer">
+                    <input type="range" min="0" max="12000" value="0" class="slider" id="myRange6" step="50">
+                    </div>
+                </div>
+                <div id="savings"></div>
+            </div>
+    </section>
+        <section id="results">
+            <div id="paymentDate">
+                <div id="outputText3"></div>
+                <div id="dueTime">
+                    <div id="dueMonth"></div>
+                    <div id="dueYear"></div>
+                </div>
+            </div>
+
+        </section>
+    </div>    
+        <footer id="footer" role="contentinfo">
+            <p>Author: Bryan Arroyo</p>
+            <p><a href="mailto:bryan.arroyo02@gmail.com">bryan.arroyo02@gmail.com</a></p>
+        </footer>
+    <script src="script.js"></script>
+</body>
+</html>
