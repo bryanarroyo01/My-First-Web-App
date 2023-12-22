@@ -14,8 +14,8 @@ const savings = document.getElementById("savings");
 
 
 currentPrincipal.value = 305000;
-currentMortgagePayment.value = 2500;
-currentInterest.value = 7.5;
+currentMortgagePayment.value = 2750;
+currentInterest.value = 8.0;
 currentExtraPayment.value = 0;
 currentSavingsAmount.value = 0;
 currentMonthlySavings.value = 0;
