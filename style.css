@@ -203,7 +203,8 @@ p{
       font-weight: bold;
     }
     footer{
-      align-self: self-end;
       padding: 7px;
+      width: 70%;
+      align-self:center;
     }
   }
