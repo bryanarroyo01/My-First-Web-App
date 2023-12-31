@@ -13,8 +13,15 @@ const currentSavings = document.getElementById("currentSavings");
 const savings = document.getElementById("savings");    
 
 
-currentPrincipal.value = 305000;
-currentMortgagePayment.value = 2750;
+// currentPrincipal.value = 305000;
+// currentMortgagePayment.value = 2750;
+// currentInterest.value = 8.0;
+// currentExtraPayment.value = 0;
+// currentSavingsAmount.value = 0;
+// currentMonthlySavings.value = 0;
+
+currentPrincipal.value = 350000;
+currentMortgagePayment.value = 2570;
 currentInterest.value = 8.0;
 currentExtraPayment.value = 0;
 currentSavingsAmount.value = 0;
@@ -50,7 +57,23 @@ function currencyFormat(num){
 }
 
 function percentageFormat(num){
-  return(num+'%');
+  return(Number(num).toFixed(2)+'%');
+}
+
+function PMT(rate, nperiod, pv, fv, type) {
+  if (!fv) fv = 0;
+  if (!type) type = 0;
+
+  if (rate == 0) return -(pv + fv)/nperiod;
+
+  var pvif = Math.pow(1 + rate, nperiod);
+  var pmt = rate / (pvif - 1) * -(pv * pvif + fv);
+
+  if (type == 1) {
+      pmt /= (1 + rate);
+  };
+
+  return pmt;
 }
 
 // Update the current slider value (each time you drag the slider handle)
@@ -112,14 +135,15 @@ currentMortgagePayment.oninput = function() {
   }
 
   function inputValidation() {
-    if(!isNaN(principal.value) &&!isNaN(monthlyPayment.value) && !isNaN(interest.value) && !isNaN(extra.value) &&!isNaN(currentSavings.value) &&!isNaN(savings.value))
+    if(!isNaN(currentPrincipal.value) &&!isNaN(currentMortgagePayment.value) && !isNaN(currentInterest.value) && !isNaN(currentExtraPayment.value) &&!isNaN(currentSavingsAmount.value) &&!isNaN(currentMonthlySavings.value) && currentMortgagePayment.value >= PMT(currentInterest.value/100/12,30*12,currentPrincipal,0,0))
       return true;
     else{
       return false;
     }
   }
   function compute() {
-    const paymentsPending=getTerm(Number(principal.value)-Number(currentSavings.value),Number(monthlyPayment.value),Number(interest.value),Number(extra.value)+Number(savings.value));
+    console.clear();
+    const paymentsPending=getTerm(Number(currentPrincipal.value),Number(currentMortgagePayment.value),Number(currentInterest.value),Number(currentExtraPayment.value),Number(currentSavingsAmount.value),Number(currentMonthlySavings.value));
       
 
     document.getElementById("dueMonth").innerHTML = addMonthsToDate(paymentsPending).toLocaleString('en-US', { month: 'short' });
@@ -136,21 +160,29 @@ currentMortgagePayment.oninput = function() {
         }  
   }
 
-  function getTerm(principal,monthlyPayment,interest,extra){
+  function getTerm(principal,monthlyPayment,interest,extra,savingAmount,monthlySavings){
     let term = 0;
-    function mortgageTerm(principalInput,monthlyPaymentInput,interestInput,extraInput){
-        if(principalInput>0){
-            principalInput-=(extraInput+monthlyPaymentInput-principalInput*interestInput/100/12);
-            term=term+1;
-            return mortgageTerm(principalInput,monthlyPaymentInput,interestInput,extraInput);
-            console.log(principalInput);
+    let projectedSavings=savingAmount;
+    
+    function mortgageTerm(principalInput,monthlyPaymentInput,interestInput,extraInput,projectedSavings){
+      
+
+        if(monthlyPaymentInput-principalInput<=monthlyPaymentInput && principalInput>= projectedSavings){
+            principalInput-=(extraInput+monthlyPaymentInput-(principalInput*interestInput/100/12).toFixed(2));
+            
+            term+=1;
+            projectedSavings+=monthlySavings;
+
+            console.log(term + "=>" + principalInput.toFixed(2) + "=>" + projectedSavings);
+
+            return mortgageTerm(principalInput,monthlyPaymentInput,interestInput,extraInput,projectedSavings);
         }
         else{
             return term;
         }
     }
 
-    return mortgageTerm(principal,monthlyPayment,interest,extra);    
+    return mortgageTerm(principal,monthlyPayment,interest,extra,projectedSavings);     
 }
 
 function completionNumber(paymentQty) {
@@ -162,24 +194,102 @@ function completionNumber(paymentQty) {
     }
 }
 
+// function addMonthsToDate(monthsToAdd) {
+
+//   if (!Number.isInteger(monthsToAdd)) {
+//     throw new Error('Months should be an integer');
+//   }
+
+//   // Clone the input date to avoid modifying the original date
+//   const resultDate = new Date;
+
+//   // Calculate the new date
+//   resultDate.setMonth(resultDate.getMonth() + monthsToAdd+1);
+//   resultDate.setDate(0); // Set the day to the last day of the previous month
+
+//   return resultDate;
+// }
+
+function inputByButton(buttonID){
+  //Get ID of Button pressed
+  const buttonName=buttonID;
+  //Identify variable and slider to update
+   let variableToUpdate;
+   let sliderToUpdate;
+   let userPrompt;
+  if(buttonName==="mortgageAmount"){
+    variableToUpdate=principal;
+    sliderToUpdate=currentPrincipal;
+    userPrompt="Please enter current loan amount to the nearest thousand."
+  }
+  else if(buttonName==="monthlyPayment"){
+    variableToUpdate=monthlyPayment;
+    sliderToUpdate=currentMortgagePayment;
+    userPrompt="Please enter current monthly payment to the nearest multiple of 10."
+  }
+  else if(buttonName==="mortgageInterest"){
+    variableToUpdate=interest;
+    sliderToUpdate=currentInterest;
+    userPrompt="Please enter loan interest truncated to 2 decimal places."
+  }
+  else if(buttonName==="mortgageExtra"){
+    variableToUpdate=extra;
+    sliderToUpdate=currentExtraPayment;
+    userPrompt="Please enter current monthly payment to the nearest multiple of 10."
+  }
+  else if(buttonName==="currentSavings"){
+    variableToUpdate=currentSavings;
+    sliderToUpdate=currentSavingsAmount;
+    userPrompt="Please enter current savings amount to the nearest multiple of 10."
+  }
+  else if(buttonName==="savings"){
+    variableToUpdate=savings;
+    sliderToUpdate=currentMonthlySavings;
+    userPrompt="Please enter monthly saving amount to the nearest multiple of 10."
+  }
+  //Store previous value
+  let previousValue = sliderToUpdate.value;
+  //Get current value
+  let proposedValue = Number(prompt(userPrompt, sliderToUpdate.value));
+  console.log(proposedValue);
+  //Check proposed value
+  if(proposedValue != 0 && proposedValue>=sliderToUpdate.min && proposedValue<=sliderToUpdate.max){
+    sliderToUpdate.value = proposedValue;
+    
+    //Format Value and assign as button text
+    if(buttonName==="mortgageInterest"){
+      document.getElementById(buttonName).innerHTML=percentageFormat(proposedValue)
+    }
+    else{
+      document.getElementById(buttonName).innerHTML=currencyFormat(proposedValue);
+    }
+    //Refresh Calculation
+    if(inputValidation) { 
+      compute();
+      }      
+  }
+  else if(proposedValue===0){
+    //Do nothing. Just Exit.
+  }
+  else{
+    alert("Invalid Input. Try again.")
+  }
+
+}
+
 function addMonthsToDate(monthsToAdd) {
 
   if (!Number.isInteger(monthsToAdd)) {
     throw new Error('Months should be an integer');
   }
 
-  // Clone the input date to avoid modifying the original date
-  const resultDate = new Date;
+  let tempDate = new Date();
+  let yearOffset = monthsToAdd/12;
+  let monthOffset = monthsToAdd%12;
+  const newDate = new Date(tempDate.getFullYear()+yearOffset, tempDate.getMonth()+monthOffset);
 
-  // Calculate the new date
-  resultDate.setMonth(resultDate.getMonth() + monthsToAdd + 1);
-  resultDate.setDate(0); // Set the day to the last day of the previous month
-
-  return resultDate;
-
-  //addMonthsToDate(62).toLocaleString('en-US', { month: 'short' });
-  //addMonthsToDate(62).getFullYear();
+  //console.log(newDate.toString());
+  return newDate;
 }
-
 
  
