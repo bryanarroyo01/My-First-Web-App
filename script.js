@@ -258,10 +258,10 @@ function inputByButton(buttonID){
     
     //Format Value and assign as button text
     if(buttonName==="mortgageInterest"){
-      document.getElementById(buttonName).innerHTML=percentageFormat(proposedValue)
+      document.getElementById(buttonName).innerHTML=percentageFormat(sliderToUpdate.value)
     }
     else{
-      document.getElementById(buttonName).innerHTML=currencyFormat(proposedValue);
+      document.getElementById(buttonName).innerHTML=currencyFormat(sliderToUpdate.value);
     }
     //Refresh Calculation
     if(inputValidation) { 
@@ -269,7 +269,10 @@ function inputByButton(buttonID){
       }      
   }
   else if(proposedValue===0){
-    //Do nothing. Just Exit.
+    //Format Value and assign as button text
+    if(buttonName==="mortgageExtra" || buttonName==="currentSavings" || buttonName==="savings"){
+      document.getElementById(buttonName).innerHTML=currencyFormat(0);
+    }
   }
   else{
     alert("Invalid Input. Try again.")
@@ -287,8 +290,6 @@ function addMonthsToDate(monthsToAdd) {
   let yearOffset = monthsToAdd/12;
   let monthOffset = monthsToAdd%12;
   const newDate = new Date(tempDate.getFullYear()+yearOffset, tempDate.getMonth()+monthOffset);
-
-  //console.log(newDate.toString());
   return newDate;
 }
 
