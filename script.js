@@ -268,10 +268,11 @@ function inputByButton(buttonID){
       compute();
       }      
   }
-  else if(proposedValue===0){
+  else if(proposedValue==0){
     //Format Value and assign as button text
     if(buttonName==="mortgageExtra" || buttonName==="currentSavings" || buttonName==="savings"){
       document.getElementById(buttonName).innerHTML=currencyFormat(0);
+      sliderToUpdate.value = 0;
     }
   }
   else{
