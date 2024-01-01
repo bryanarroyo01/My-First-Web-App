@@ -13,19 +13,19 @@ const currentSavings = document.getElementById("currentSavings");
 const savings = document.getElementById("savings");    
 
 
-// currentPrincipal.value = 305000;
-// currentMortgagePayment.value = 2750;
-// currentInterest.value = 8.0;
-// currentExtraPayment.value = 0;
-// currentSavingsAmount.value = 0;
-// currentMonthlySavings.value = 0;
-
-currentPrincipal.value = 350000;
-currentMortgagePayment.value = 2570;
+currentPrincipal.value = 305000;
+currentMortgagePayment.value = 2750;
 currentInterest.value = 8.0;
 currentExtraPayment.value = 0;
 currentSavingsAmount.value = 0;
 currentMonthlySavings.value = 0;
+
+// currentPrincipal.value = 350000;
+// currentMortgagePayment.value = 2570;
+// currentInterest.value = 8.0;
+// currentExtraPayment.value = 0;
+// currentSavingsAmount.value = 0;
+// currentMonthlySavings.value = 0;
 
 
 
@@ -150,7 +150,7 @@ currentMortgagePayment.oninput = function() {
     
     document.getElementById("dueYear").innerHTML = addMonthsToDate(paymentsPending).getFullYear();
 
-    const futureSavings = currentSavings.value + paymentsPending*savings.value;
+    const futureSavings = currentSavingsAmount.value + paymentsPending*currentMonthlySavings.value;
 
     if(futureSavings>0){
       document.getElementById("outputText3").innerHTML = "You could pay your mortgage on: "
